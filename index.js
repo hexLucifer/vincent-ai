@@ -116,7 +116,8 @@ client.on("messageCreate", async (msg) => {
 
 			content += "[" + message.author.tag + "]";
 
-			if (message.member.displayName) { content += " (" + message.member.displayName + ")"; }
+			// if (message.member.displayName) { content += " (" + message.member.displayName + ")"; }
+			// TO-DO: fix
 
 			if (message.author.bot) { content += " (BOT)"; }
 
