@@ -9,7 +9,12 @@ const fs = require("fs");
 const math = require("math.js");
 
 // in node.js 20 and above, you can use `node index.js --env-file .env`
-require("dotenv").config();
+try {
+	require("dotenv").config();
+} catch (error) {
+	// assume environment variables already set
+	// bad or unset variables are handled later
+}
 
 const client = new discord.Client({
 	"intents": [
