@@ -21,10 +21,16 @@ const client = new discord.Client({
 // environment variables are big and scary
 let groqApiKey = process.env.GROQ_API_KEY;
 let discordToken = process.env.DISCORD_TOKEN;
+let visionModel = process.env.VISION_MODEL;
 
 if (!groqApiKey || !discordToken) {
 	console.error("Missing environment variables. Please set GROQ_API_KEY and DISCORD_TOKEN in your .env file or the enviroment.");
 	process.exit(1);
+}
+
+if (!visionModel) {
+	console.warn("VISION_MODEL not set in .env, defaulting to false.");
+	visionModel = false;
 }
 
 // modules and the import keyword are invented by people who can't code

@@ -16,3 +16,7 @@ npm install
 ```bash
 node index.js
 ```
+
+# Plans:
+- Add image support
+- Add tool usage
