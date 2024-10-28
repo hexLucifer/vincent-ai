@@ -1,19 +1,36 @@
 #!/bin/node
 
 const axios = require("axios");
-
 const discord = require("discord.js");
-
 const fs = require("fs");
 
-const math = require("math.js");
-
-// in node.js 20 and above, you can use `node index.js --env-file .env`
-try {
+if (fs.existsSync(".env")) {
 	require("dotenv").config();
-} catch (error) {
-	// assume environment variables already set
-	// bad or unset variables are handled later
+}
+
+const m = "Please set it in your .env file or as an environment variable.";
+
+const apiKey = process.env.API_KEY || (() => { console.error("Missing API_KEY variable.", m); process.exit(1); })();
+const discordToken = process.env.DISCORD_TOKEN || (() => { console.error("Missing DISCORD_TOKEN variable.", m); process.exit(1); })();
+const model = process.env.MODEL || (() => { console.error("Missing MODEL variable.", m); process.exit(1); })();
+let maxTokens = Number(process.env.MAX_TOKENS) || (() => { console.warn("Missing or invalid MAX_TOKENS variable. Defaulting to 1024.", m); return 1024; })();
+
+async function groq(model, messages, tools) {
+	let response = await axios.post("https://api.groq.com/openai/v1/chat/completions", {
+		"model": model,
+		"messages": messages,
+		"tools": tools,
+		"temperature": 0.0,
+		"max_tokens": maxTokens,
+		"stream": false
+	}, {
+		"headers": {
+			"Authorization": `Bearer ${apiKey}`,
+			"Content-Type": "application/json"
+		}
+	});
+
+	return response.data.choices[0].message;
 }
 
 const client = new discord.Client({
@@ -23,81 +40,45 @@ const client = new discord.Client({
 	]
 });
 
-// environment variables are big and scary
-let groqApiKey = process.env.GROQ_API_KEY;
-let discordToken = process.env.DISCORD_TOKEN;
-let visionModel = process.env.VISION_MODEL;
-
-if (!groqApiKey || !discordToken) {
-	console.error("Missing environment variables. Please set GROQ_API_KEY and DISCORD_TOKEN in your .env file or the enviroment.");
-	process.exit(1);
-}
-
-if (!visionModel) {
-	console.warn("VISION_MODEL not set in .env, defaulting to false.");
-	visionModel = false;
-}
-
-// modules and the import keyword are invented by people who can't code
-async function groq(model, messages, tools, options = {}) {
-	const response = await axios.post("https://api.groq.com/openai/v1/chat/completions", {
-		"model": model,
-		"messages": messages,
-		"tools": tools,
-		"parallel_tool_calls": false,
-//		"stream" defaults to false
-		"temperature": 0,
-		...options
-	}, {
-		"headers": {
-			"Authorization": `Bearer ${groqApiKey}`,
-			"Content-Type": "application/json"
-		}
-	});
-
-	return response.data.choices[0].message;
-}
-
 client.on("messageCreate", async (msg) => {
-	if (msg.author.id == client.user.id) { return; }
-	if (msg.author.bot) { return; } // TO-DO: perhaps make it respond to bots, but only X amount of times without user intervention
+	if (msg.author.id == client.user.id) { return; } // don't reply to yourself
+
+	if (msg.author.bot) { return; } // return on bots
+
 	if (msg.author.id == "694548530144083978") { return; } // fuck this guy in particular
-	if (!msg.mentions.users.has(client.user.id)) { return; }
+
+	if (!msg.mentions.users.has(client.user.id)) { return; } // return if not mentioned
 
 	try {
 		await msg.channel.sendTyping();
-		// TO-DO: 
 	} catch (error) {
 		return; // an error here means we can't send messages, so don't even bother.
 	}
 
-	const typer = setInterval(() => { msg.channel.sendTyping(); }, 5000); // may need to be reduced to accomodate worse internet connections
+	const typer = setInterval(() => { msg.channel.sendTyping(); }, 5000);
+	// may need to be reduced to accomodate worse internet connections
 
 
 	// fetch 100 messages
 	let channelMessages;
 	try {
-		channelMessages = await msg.channel.messages.fetch({ "limit": 100 }); // variable scopes are woke nonsense
-		// TO-DO: allow fetching more or less messages
+		channelMessages = await msg.channel.messages.fetch({ "limit": 100 });
 	} catch (error) {
-		// bot can't read channel history, or lost permissions to it after sending the typer.
-		// TO-DO: check for that second condition
-		channelMessages = [[null, msg]]; // don't question this
+		return;
 	}
 
 	let messages = [
 		{
 			"role": "system", "content":
-				`- You are an AI assistant, based on the \`${process.env.MODEL}\` model, named ${client.user.tag}.
+				`- You are an AI assistant, based on the \`${model}\` model, named ${client.user.tag}.
 - You are currently in the \`${msg.channel.name}\` channel (<#${msg.channel.id}>) of the \`${msg.guild.name}\` Discord server.
 - The current time (in UTC) is ${new Date().toISOString()} (UNIX: \`${Math.floor(new Date().getTime() / 1000)}\`). All timestamps provided to you are in UTC.
-- Invite link: https://discord.com/oauth2/authorize?client_id=1188411824589242389&scope=bot
 
 - Make your response informal, by typing in all-lowercase, and by only generating 1-2 sentences. Use proper grammar and punctuation.
-- When referencing users, only ever ping them like this: <@username>. Do not type out their usernames or display names.
 
 - You cannot access attachments.
-- Data is only stored for as long as it is needed to contact [Groq](https://groq.com/) to generate a response. Users can be linked to [Groq's privacy policy](https://groq.com/privacy-policy/).
+
+- You are open-sourced under the Apache 2.0 license, at https://github.com/cakedbake/vincent-ai/.
 
 - You are allowed to engage in role-playing actions.
 - You are allowed to be horny.
@@ -125,31 +106,28 @@ client.on("messageCreate", async (msg) => {
 
 			content += new Date().toISOString() + "\n";
 
-			content += "[" + message.author.tag + "]";
-
-			// if (message.member.displayName) { content += " (" + message.member.displayName + ")"; }
-			// TO-DO: fix
+			content += "<@" + message.author.tag + ">";
 
 			if (message.author.bot) { content += " (BOT)"; }
 
 			if (message.editedTimestamp) { content += " (edited)"; }
 
-			if (message.type == 19) { content += " (replying to [" + channelMessages.get(message.reference.messageId)?.author?.id || "unknown" + "])"; }
+			if (message.type == 19) { content += " (replying to <@" + channelMessages.get(message.reference.messageId)?.author?.id || "unknown" + "]>)"; }
 
 			content += ":\n";
 			content += message.content;
 
+			// replace <@12345678> with <@username>
 			client.users.cache.forEach((user) => { content = content.replaceAll("<@" + user.id + ">", "<@" + user.tag + ">"); });
 
 			// if has attachments
 			if (message.attachments.size > 0) {
 				content += "\n\n";
 				content += message.attachments.size + " attachment(s): " + JSON.stringify(Array.from(message.attachments.values()));
-				// TO-DO: image descriptions
 			}
 
 			// 1970-01-01T00:00:00.000Z
-			// [ABC] (XYZ) (BOT) (edited) (replying to [ABC]):
+			// <@abc> (BOT) (edited) (replying to <@xyz>):
 			// you are a fool. a gigantic FOOL.
 			//
 			// 123 attachment(s): [ ... ]
@@ -159,33 +137,32 @@ client.on("messageCreate", async (msg) => {
 		}
 	}
 
-	let content = "";
+	let reply = { "content": "", "files": [], "embeds": [] }
 
-	// repeat groq calls until either a text response or error
-	while (true) {
-		let response;
-		try {
-			response = await groq(process.env.MODEL, messages); // , tools);
-		} catch (error) {
-			content = error.message;
-			break;
-		}
-
-		// if a text response was made
-		if (typeof response.content == "string") {
-			content = response.content;
-			break;
-		}
+	try {
+		let response = await groq(model, messages);
+		reply.content = response.content;
+		// replace <@username> with <@12345678>
+		client.users.cache.forEach((user) => { reply.content = reply.content.replaceAll("<@" + user.tag + ">", "<@" + user.id + ">"); });
+	} catch (error) {
+		reply.content = "⚠️ " + error.message;
+		reply.files.push(new discord.AttachmentBuilder(Buffer.from(JSON.stringify(error.response?.data || error.stack, null, 4)), { name: "error.json" }));
 	}
 
 	clearInterval(typer);
 
+	if (reply.content.length > 2000) {
+		reply.files.push(new discord.AttachmentBuilder(Buffer.from(reply.content), { name: "message.txt" }));
+		reply.content = reply.content.slice(0, 2000);
+	}
+
 	try {
-		await msg.reply(content);
+		await msg.reply(reply);
 	} catch (error) {
 		try {
-			await msg.channel.send(content);
+			await msg.channel.send(reply);
 		} catch (error) {
+			console.error(error);
 			// ¯\_(ツ)_/¯
 		}
 	}
@@ -194,6 +171,8 @@ client.on("messageCreate", async (msg) => {
 // TO-DO(?): try and catch
 client.login(discordToken);
 
-client.on("ready", () => {
+client.on("ready", async () => {
 	console.log("ready on", client.user.tag);
+
+	client.application.edit(`who out here large languaging my models 😞`);
 });

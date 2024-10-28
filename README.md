@@ -1,5 +1,7 @@
-# How to run
-## Prerequisites: Node.js version 18 or higher.
+# Groq-based Discord AI chatbot
+
+## How to run
+### Prerequisites: Node.js version 18 or higher.
 1. Clone this repository like this:
 ```bash
 git clone https://github.com/cakedbake/vincent-ai.git
@@ -17,8 +19,17 @@ npm install
 node index.js
 ```
 
-# Plans:
-- Add image support
-- Add tool usage
-- Different API providers
-- Memory
+## Needed environment variables:
+- `DISCORD_TOKEN`: Discord bot token.
+- `API_KEY`: your Groq API key.
+- `MODEL`: model used to generate responses.
+
+## Optional environment variables:
+- `MAX_TOKENS`: maximum amount of tokens to generate.
+- `CONTEXT`: how many messages of context to use.
+
+## Plans:
+- Add tool usage, Memory
+- Custom system prompts
+- Custom provider support
+- Customizable blacklisting
