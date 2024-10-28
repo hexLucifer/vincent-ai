@@ -47,7 +47,7 @@ const client = new discord.Client({
 function isBlacklisted(id) {
 	if (!fs.existsSync("blacklist.json")) { return false; }
 
-	let blacklist = fs.readFileSync("blacklist.json");
+	let blacklist = fs.readFileSync("blacklist.json").toString();
 
 	try {
 		blacklist = JSON.parse(blacklist);
