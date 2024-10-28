@@ -45,8 +45,6 @@ client.on("messageCreate", async (msg) => {
 
 	if (msg.author.bot) { return; } // return on bots
 
-	if (msg.author.id == "694548530144083978") { return; } // fuck this guy in particular
-
 	if (!msg.mentions.users.has(client.user.id)) { return; } // return if not mentioned
 
 	try {
