@@ -15,8 +15,8 @@ const discordToken = process.env.DISCORD_TOKEN || (() => { console.error("Missin
 const model = process.env.MODEL || (() => { console.error("Missing MODEL variable.", m); process.exit(1); })();
 let maxTokens = Number(process.env.MAX_TOKENS) || (() => { console.warn("Missing or invalid MAX_TOKENS variable. Defaulting to 1024.", m); return 1024; })();
 
-async function groq(model, messages, tools) {
-	let response = await axios.post("https://api.groq.com/openai/v1/chat/completions", {
+async function provider(model, messages, tools) {
+	let response = await axios.post("https://api.deepinfra.com/v1/openai/chat/completions", {
 		"model": model,
 		"messages": messages,
 		"tools": tools,
@@ -140,7 +140,7 @@ client.on("messageCreate", async (msg) => {
 	let reply = { "content": "", "files": [], "embeds": [] }
 
 	try {
-		let response = await groq(model, messages);
+		let response = await provider(model, messages);
 		reply.content = response.content;
 		// replace <@username> with <@12345678>
 		client.users.cache.forEach((user) => { reply.content = reply.content.replaceAll("<@" + user.tag + ">", "<@" + user.id + ">"); });
