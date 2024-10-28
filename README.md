@@ -21,7 +21,7 @@ node index.js
 
 ## Needed environment variables:
 - `DISCORD_TOKEN`: Discord bot token.
-- `API_KEY`: your Groq API key.
+- `API_KEY`: your DeepInfra API key.
 - `MODEL`: model used to generate responses.
 
 ## Optional environment variables:
