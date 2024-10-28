@@ -5,7 +5,11 @@ const discord = require("discord.js");
 const fs = require("fs");
 
 if (fs.existsSync(".env")) {
-	require("dotenv").config();
+	try {
+		require("dotenv").config();
+	} catch (error) {
+		// assume environment variables are set in the environment
+	}
 }
 
 const m = "Please set it in your .env file or as an environment variable.";
