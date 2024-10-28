@@ -1,4 +1,4 @@
-# Groq-based Discord AI chatbot
+# DeepInfra-based Discord AI chatbot
 
 ## How to run
 ### Prerequisites: Node.js version 18 or higher.
