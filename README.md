@@ -27,8 +27,18 @@ node index.js
 ## Optional environment variables:
 - `MAX_TOKENS`: maximum amount of tokens to generate.
 
+## Blacklisting
+- You can blacklist a user, a channel, or a guild by adding its ID to the `blacklist.json` file, like this:
+```json
+[
+	"123456789012345678",
+	"123456789012345678",
+	...
+]
+```
+- The bot will completely ignore blacklisted entities.
+
 ## Plans:
 - Add tool usage, Memory
 - Custom system prompts
 - Custom provider support
-- Customizable blacklisting

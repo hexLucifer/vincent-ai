@@ -44,12 +44,28 @@ const client = new discord.Client({
 	]
 });
 
+function isBlacklisted(id) {
+	if (!fs.existsSync("blacklist.json")) { return false; }
+
+	let blacklist = fs.readFileSync("blacklist.json");
+
+	try {
+		blacklist = JSON.parse(blacklist);
+		return blacklist.includes(id);
+	} catch (error) {
+		console.warn("A blacklist.json exists, but is not valid JSON!");
+		console.warn(error.message);
+
+		return false;
+	}
+}
+
 client.on("messageCreate", async (msg) => {
 	if (msg.author.id == client.user.id) { return; } // don't reply to yourself
-
 	if (msg.author.bot) { return; } // return on bots
-
 	if (!msg.mentions.users.has(client.user.id)) { return; } // return if not mentioned
+
+	if (isBlacklisted(msg.author.id) || isBlacklisted(msg.channel.id) || isBlacklisted(msg.guild.id)) { return; }
 
 	try {
 		await msg.channel.sendTyping();
@@ -180,5 +196,5 @@ client.login(discordToken);
 client.on("ready", async () => {
 	console.log("ready on", client.user.tag);
 
-	client.application.edit(`who out here large languaging my models 😞`);
+	// client.application.edit(`who out here large languaging my models 😞`);
 });
