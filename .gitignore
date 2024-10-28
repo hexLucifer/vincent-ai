@@ -1,5 +1,0 @@
-node_modules
-.env
-moveDevToProd.sh
-package-lock.json
-.gitignore
