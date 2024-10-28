@@ -159,8 +159,7 @@ client.on("messageCreate", async (msg) => {
 		try {
 			await msg.channel.send(reply);
 		} catch (error) {
-			console.error(error);
-			// ¯\_(ツ)_/¯
+			// either can't send the message (lack of permissions) or can't send the message (channel deleted) or can't send the message (empty)
 		}
 	}
 });
