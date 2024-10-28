@@ -26,7 +26,6 @@ node index.js
 
 ## Optional environment variables:
 - `MAX_TOKENS`: maximum amount of tokens to generate.
-- `CONTEXT`: how many messages of context to use.
 
 ## Plans:
 - Add tool usage, Memory
