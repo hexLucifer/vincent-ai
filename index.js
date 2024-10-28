@@ -109,6 +109,10 @@ client.on("messageCreate", async (msg) => {
 
 			content += "<@" + message.author.tag + ">";
 
+			if (message.author.nickname) {
+				content += " (" + message.author.nickname + ")";
+			}
+
 			if (message.author.bot) { content += " (BOT)"; }
 
 			if (message.editedTimestamp) { content += " (edited)"; }
