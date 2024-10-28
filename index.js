@@ -56,7 +56,6 @@ client.on("messageCreate", async (msg) => {
 	const typer = setInterval(() => { msg.channel.sendTyping(); }, 5000);
 	// may need to be reduced to accomodate worse internet connections
 
-
 	// fetch 100 messages
 	let channelMessages;
 	try {
