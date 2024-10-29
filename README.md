@@ -45,3 +45,4 @@ node index.js
 - Add tool usage, Memory
 - Custom system prompts
 - Custom provider support
+- Web searching (with Google)
