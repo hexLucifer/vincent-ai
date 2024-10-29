@@ -47,6 +47,7 @@ node index.js
 - Custom provider support
 - Web searching (with Google)
 - Vision will be added when DeepInfra supports Pixtral 12B.
+- DM support may come in the future, disabled by default, but could be enabled manually.
 
 ## A rant on Llama 3.2 Vision
 1.  Llama 3.2 Vision is hot garbage!
