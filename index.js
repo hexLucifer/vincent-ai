@@ -19,6 +19,7 @@ const discordToken = process.env.DISCORD_TOKEN || (() => { console.error("Missin
 const model = process.env.MODEL || (() => { console.error("Missing MODEL variable.", m); process.exit(1); })();
 let maxTokens = Number(process.env.MAX_TOKENS) || (() => { console.warn("Missing or invalid MAX_TOKENS variable. Defaulting to 1024.", m); return 1024; })();
 
+// customize if need be
 async function provider(model, messages, tools) {
 	let response = await axios.post("https://api.deepinfra.com/v1/openai/chat/completions", {
 		"model": model,
