@@ -50,7 +50,7 @@ node index.js
 - DM support may come in the future, disabled by default, but could be enabled manually.
 
 ## A rant on Llama 3.2 Vision
-1.  Llama 3.2 Vision is hot garbage!
+1. Llama 3.2 Vision is hot garbage!
 2. It keeps refusing to describe perfectly safe images!
 3. It either makes shit up or describes the image badly!
 4. ONLY ONE IMAGE PER YOUR 128K TOKENS OF CONTEXT!!! PIXTRAL 12B HAS 128K OF CONTEXT AND YOU CAN SHOVE IT ***FULL*** OF IMAGES!!!
