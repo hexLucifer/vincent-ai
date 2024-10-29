@@ -163,6 +163,7 @@ client.on("messageCreate", async (msg) => {
 	try {
 		let response = await provider(model, messages);
 		reply.content = response.content;
+
 		// replace <@username> with <@12345678>
 		client.users.cache.forEach((user) => { reply.content = reply.content.replaceAll("<@" + user.tag + ">", "<@" + user.id + ">"); });
 	} catch (error) {
@@ -171,6 +172,8 @@ client.on("messageCreate", async (msg) => {
 	}
 
 	clearInterval(typer);
+
+	if (reply.content == "") { return; }
 
 	if (reply.content.length > 2000) {
 		reply.files.push(new discord.AttachmentBuilder(Buffer.from(reply.content), { name: "message.txt" }));
@@ -183,9 +186,8 @@ client.on("messageCreate", async (msg) => {
 		try {
 			await msg.channel.send(reply);
 		} catch (error) {
-			// lack of permissions || channel deleted || empty
-			// neither one of the first two is the bot's issue
-			// the third one happens when the last message is from role "assistant"
+			// lack of permissions || channel deleted
+			// neither one of which is the bot's issue
 		}
 	}
 });

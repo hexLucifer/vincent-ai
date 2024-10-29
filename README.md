@@ -37,6 +37,9 @@ node index.js
 ]
 ```
 - The bot will completely ignore blacklisted entities.
+- Note: You need to enable Developer Mode in your Discord client to be able to copy the IDs:
+1. Go into User Settings by clicking the cog next to your profile.
+2. Go into App Settings > Advanced and enable Developer Mode.
 
 ## Plans:
 - Add tool usage, Memory
