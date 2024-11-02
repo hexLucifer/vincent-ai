@@ -48,6 +48,3 @@ node index.js
 - Web searching (with Google)
 - Vision will be added when DeepInfra supports Pixtral 12B.
 - DM support may come in the future, disabled by default, but could be enabled manually.
-
-## A rant on Llama 3.2 Vision
-1. Llama 3.2 Vision is hot garbage! Sometimes, it just refuses to describe perfectly safe images! And even when it does cooperate, it provides terrible descriptions! Also, only one image per your entire **128K** context window? Pathetic! Pixtral **12B** supports a context full of images, and it works better than your **90B** model!!
