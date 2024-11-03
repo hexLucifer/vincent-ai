@@ -256,5 +256,7 @@ client.login(process.env.DISCORD_TOKEN);
 client.on("ready", async () => {
 	console.log("ready on", client.user.tag);
 
-	// client.application.edit(`who out here large languaging my models 😞`);
+	// client.application.edit("who out here large languaging my models 😞");
+
+	// client.user.setActivity("free ballpoint hammer giveaway at 123 fazbear st", { "type": discord.ActivityType.Custom });
 });
