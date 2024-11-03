@@ -1,4 +1,4 @@
-#!/bin/node
+#!/usr/bin/node
 
 const axios = require("axios");
 const discord = require("discord.js");
