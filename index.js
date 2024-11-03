@@ -114,6 +114,7 @@ client.on("messageCreate", async (msg) => {
 	try {
 		channelMessages = await msg.channel.messages.fetch({ "limit": 100 });
 	} catch (error) {
+		clearInterval(typer);
 		return;
 	}
 
