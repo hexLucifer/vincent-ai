@@ -100,7 +100,9 @@ client.on("messageCreate", async (msg) => {
 
 	if (isBlacklisted(msg.author.id) || isBlacklisted(msg.channel.id) || isBlacklisted(msg.guild.id)) {
 		if (fs.existsSync("Weezer - Buddy Holly.mp3")) {
-			try { await msg.reply({ "files": [ "./Weezer - Buddy Holly.mp3" ] }); } catch (error) {}
+			try {
+				await msg.reply({ "files": ["./Weezer - Buddy Holly.mp3"] });
+			} catch (error) { }
 		}
 		return;
 	}
