@@ -4,12 +4,10 @@ const axios = require("axios");
 const discord = require("discord.js");
 const fs = require("fs");
 
-if (fs.existsSync(".env")) {
-	try {
-		require("dotenv").config();
-	} catch (error) {
-		// assume environment variables are set in the environment
-	}
+try {
+	require("dotenv").config();
+} catch (error) {
+	// assume environment variables are set in the environment
 }
 
 const m = "Please set it in your .env file or as an environment variable.";
