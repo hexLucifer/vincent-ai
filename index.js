@@ -98,7 +98,14 @@ client.on("messageCreate", async (msg) => {
 	if (msg.author.bot) { return; } // return on bots
 	if (!msg.mentions.users.has(client.user.id)) { return; } // return if not mentioned
 
-	if (isBlacklisted(msg.author.id) || isBlacklisted(msg.channel.id) || isBlacklisted(msg.guild.id)) { return; }
+	if (isBlacklisted(msg.author.id) || isBlacklisted(msg.channel.id) || isBlacklisted(msg.guild.id)) {
+		if (fs.existsSync("Weezer - Buddy Holly.mp3")) {
+			msg.reply({ "files": [ "./Weezer - Buddy Holly.mp3" ] });
+			// for every user forced to listen to buddy holly, blacklist violations decrease by 98%
+		} else {
+			return;
+		}
+	}
 
 	try {
 		await msg.channel.sendTyping();
