@@ -19,12 +19,12 @@ npm install
 node index.js
 ```
 
-## Needed environment variables:
+## Needed environment variables
 - `DISCORD_TOKEN`: Discord bot token.
 - `API_KEY`: your DeepInfra API key.
 - `MODEL`: model used to generate responses.
 
-## Optional environment variables:
+## Optional environment variables
 - `MAX_TOKENS`: maximum amount of tokens to generate.
 
 ## Blacklisting
@@ -41,10 +41,13 @@ node index.js
 1. Go into User Settings by clicking the cog next to your profile.
 2. Go into App Settings > Advanced and enable Developer Mode.
 
-## Plans:
+## Plans
 - Add tool usage, Memory
 - Custom system prompts
 - Custom provider support
 - Web searching (with Google)
 - Vision will be added when DeepInfra supports Pixtral 12B.
 - DM support may come in the future, disabled by default, but could be enabled manually.
+
+## I think I hate myself, and would love to have a worse version of this bot in Python
+- [Here you go](https://github.com/Marcotrix/calem)
