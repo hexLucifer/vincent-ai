@@ -49,5 +49,5 @@ node index.js
 - Vision will be added when DeepInfra supports Pixtral 12B.
 - DM support may come in the future, disabled by default, but could be enabled manually.
 
-## I think I hate myself, and would love to have a worse version of this bot in Python
+## I think I hate myself, and would love to have a worse version of this bot in Python!
 - [Here you go](https://github.com/Marcotrix/calem)
