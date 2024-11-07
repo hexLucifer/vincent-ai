@@ -38,7 +38,7 @@ if (!process.env.MAX_TOKENS) { // NaN is not truthy
 let attachment_cache = {};
 
 // customize if need be
-async function chat_completion(model, messages, tools) {
+async function chat_completion (model, messages, tools) {
 	let response = await axios.post("https://api.deepinfra.com/v1/openai/chat/completions", {
 		"model": model,
 		"messages": messages,
@@ -56,7 +56,7 @@ async function chat_completion(model, messages, tools) {
 	return response.data.choices[0].message;
 }
 
-async function audio_transcription(buffer) {
+async function audio_transcription (buffer) {
 	let formData = new FormData();
 	formData.append("audio", new Blob([buffer]));
 
@@ -77,7 +77,7 @@ const client = new discord.Client({
 	]
 });
 
-function isBlacklisted(id) {
+function isBlacklisted (id) {
 	if (!fs.existsSync("blacklist.json")) { return false; }
 
 	let blacklist = fs.readFileSync("blacklist.json").toString();
