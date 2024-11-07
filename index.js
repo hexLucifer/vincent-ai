@@ -119,7 +119,7 @@ client.on("messageCreate", async (msg) => {
 	// fetch 100 messages
 	let channelMessages;
 	try {
-		channelMessages = await msg.channel.messages.fetch({ "limit": 100 });
+		channelMessages = await msg.channel.messages.fetch({ "limit": 100 }); // variable scopes are woke nonsense
 	} catch (error) {
 		clearInterval(typer);
 		return;
@@ -185,8 +185,9 @@ client.on("messageCreate", async (msg) => {
 			content += ":\n";
 			content += message.content;
 
-			// replace <@12345678> with <@username>
+			// replace <@12345678> and <@!12345678> with <@username>
 			client.users.cache.forEach((user) => { content = content.replaceAll("<@" + user.id + ">", "<@" + user.tag + ">"); });
+			client.users.cache.forEach((user) => { content = content.replaceAll("<@!" + user.id + ">", "<@" + user.tag + ">"); });
 
 			if (message.attachments.size > 0) {
 				content += "\n\n";
