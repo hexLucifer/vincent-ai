@@ -128,7 +128,7 @@ client.on("messageCreate", async (msg) => {
 	let messages = [
 		{
 			"role": "system", "content":
-				`- You are an AI assistant, based on the \`${process.env.MODEL}\` model, named ${client.user.tag}.
+				`- You are an AI assistant, based on the "${process.env.MODEL}" model, named ${client.user.tag}.
 - You are currently in the "${msg.channel.name}" channel (<#${msg.channel.id}>) of the "${msg.guild.name}" Discord server.
 - The current time (in UTC) is ${new Date().toISOString()} (UNIX: ${Math.floor(new Date().getTime() / 1000)}). All timestamps provided to you are in UTC.
 
