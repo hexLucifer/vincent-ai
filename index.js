@@ -185,9 +185,10 @@ client.on("messageCreate", async (msg) => {
 			content += ":\n";
 			content += message.content;
 
-			// replace <@12345678> and <@!12345678> with <@username>
-			client.users.cache.forEach((user) => { content = content.replaceAll("<@" + user.id + ">", "<@" + user.tag + ">"); });
-			client.users.cache.forEach((user) => { content = content.replaceAll("<@!" + user.id + ">", "<@" + user.tag + ">"); });
+			client.users.cache.forEach((user) => { content = content.replaceAll("<@" + user.id + ">", "<@" + user.tag + ">"); }); // replace <@12345678> with <@username>
+			client.users.cache.forEach((user) => { content = content.replaceAll("<@!" + user.id + ">", "<@" + user.tag + ">"); }); // replace <@!12345678> with <@username>
+			client.channels.cache.forEach((channel) => { content = content.replaceAll("<#" + channel.id + ">", "<#" + channel.name + ">"); }); // replace <#12345678> with <#channel>
+			message.guild.roles.cache.forEach((role) => { content = content.replaceAll("<@&" + role.id + ">", "<@&" + role.name + ">"); }); // replace <@&12345678> with <@&role>
 
 			if (message.attachments.size > 0) {
 				content += "\n\n";
@@ -235,8 +236,12 @@ client.on("messageCreate", async (msg) => {
 		let response = await chat_completion(process.env.MODEL, messages);
 		reply.content = response.content;
 
-		// replace <@username> with <@12345678>
-		client.users.cache.forEach((user) => { reply.content = reply.content.replaceAll("<@" + user.tag + ">", "<@" + user.id + ">"); });
+		// what a mess!
+		// TO-DO: export to function
+		client.users.cache.forEach((user) => { reply.content = reply.content.replaceAll("<@" + user.tag + ">", "<@" + user.id + ">"); }); // replace <@username> with <@12345678>
+		client.users.cache.forEach((user) => { reply.content = reply.content.replaceAll("<@!" + user.tag + ">", "<@!" + user.id + ">"); }); // replace <@!username> with <@!12345678>
+		client.channels.cache.forEach((channel) => { reply.content = reply.content.replaceAll("<#" + channel.name + ">", "<#" + channel.id + ">"); }); // replace <#channel> with <#12345678>
+		msg.guild.roles.cache.forEach((role) => { reply.content = reply.content.replaceAll("<@&" + role.name + ">", "<@&" + role.id + ">"); }); // replace <@&role> with <@&12345678>
 	} catch (error) {
 		reply.content = "⚠️ " + error.message;
 		reply.files.push(new discord.AttachmentBuilder(Buffer.from(JSON.stringify(error.response?.data || error.stack, null, 4)), { name: "error.json" }));
